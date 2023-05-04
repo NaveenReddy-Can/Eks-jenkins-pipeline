@@ -15,8 +15,8 @@ pipeline {
         steps {
          sh 'aws eks --region us-east-1 update-kubeconfig --name ridiculous-painting-1683146421'
          sh 'ls -al'
-         sh 'kubectl apply -f voting-with-ingress.yml'
-         sh 'kubectl apply -f ingress.yml'
+         sh 'kubectl delete -f voting-with-ingress.yml'
+         sh 'kubectl delete -f ingress.yml'
          sh 'kubectl get pods,svc,ingress'
         }         
      }
