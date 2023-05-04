@@ -220,34 +220,34 @@ spec:
             - containerPort: 80
               name: vote
 
-# node
+# cluster
 ---
 apiVersion: v1
 kind: Service
 metadata:
   labels:
-    apps: node
-  name: node
+    apps: cluster
+  name: cluster
 spec:
   clusterIP: None
   selector:
-    app: node
+    app: cluster
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: node
-  name: node
+    app: cluster
+  name: cluster
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: node
+      app: cluster
   template:
     metadata:
       labels:
-        app: node
+        app: cluster
     spec:
       affinity:
         nodeAffinity:
@@ -259,5 +259,5 @@ spec:
                     values:
                       - ridiculous-painting-1683146421-ng-1
       containers:
-        - image: sreeharshav/example-voting-app_node:latest
-          name: node
+        - image: sreeharshav/example-voting-app_cluster:latest
+          name: cluster
