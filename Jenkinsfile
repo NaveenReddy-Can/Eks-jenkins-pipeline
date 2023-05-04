@@ -11,7 +11,7 @@ pipeline {
          sh 'kubectl get ns'
         }
       }
-     stage('Deploy Voting App') {
+     stage('Deploy Voting App with ') {
         steps {
          sh 'aws eks --region us-east-1 update-kubeconfig --name ridiculous-painting-1683146421'
          sh 'ls -al'
