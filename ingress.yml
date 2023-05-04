@@ -9,36 +9,35 @@ metadata:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
-    alb.ingress.kubernetes.io/ssl-redirect: '443'
+    alb.ingress.kubernetes.io/ssl-redirect: "443"
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
     alb.ingress.kubernetes.io/healthcheck-timeout-seconds: "5"
     alb.ingress.kubernetes.io/success-codes: "200"
     alb.ingress.kubernetes.io/unhealthy-threshold-count: "2"
 spec:
-  ingressClassName: alb
   tls:
-  - hosts:
-    - "vote.k8sbatch17.xyz"
-    - "result.k8sbatch17.xyz"
-    secretName: my-tls-secret
+    - hosts:
+        - "vote.naveenreddy.online"
+        - "result.naveenreddy.online"
+      secretName: my-tls-secret
   rules:
-  - host: vote.k8sbatch17.xyz
-    http:
-      paths:
-        - path: /
-          pathType: Prefix
-          backend:
-            service:
-              name: vote
-              port:
-                number: 80
-  - host: result.k8sbatch17.xyz
-    http:
-      paths:
-        - path: /
-          pathType: Prefix
-          backend:
-            service:
-              name: result
-              port:
-                number: 80
+    - host: vote.naveenreddy.online
+      http:
+        paths:
+          - path: /*
+            pathType: Prefix
+            backend:
+              service:
+                name: vote
+                port:
+                  number: 80
+    - host: result.naveenreddy.online
+      http:
+        paths:
+          - path: /*
+            pathType: Prefix
+            backend:
+              service:
+                name: result
+                port:
+                  number: 80
