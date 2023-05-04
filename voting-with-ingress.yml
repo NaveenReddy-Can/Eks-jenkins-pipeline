@@ -1,18 +1,18 @@
 # redis
---- 
+---
 apiVersion: v1
 kind: Service
-metadata: 
-  labels: 
+metadata:
+  labels:
     app: redis
   name: redis
-spec: 
+spec:
   clusterIP: None
   ports:
-  - name: redis-service
-    port: 6379
-    targetPort: 6379
-  selector: 
+    - name: redis-service
+      port: 6379
+      targetPort: 6379
+  selector:
     app: redis
 ---
 apiVersion: apps/v1
@@ -35,33 +35,33 @@ spec:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
-            - matchExpressions:
-              - key: alpha.eksctl.io/nodegroup-name
-                operator: In
-                values:
-                - k8sb18-cluster-ng-1 
+              - matchExpressions:
+                  - key: alpha.eksctl.io/nodegroup-name
+                    operator: In
+                    values:
+                      - ridiculous-painting-1683146421-ng-1
       containers:
-      - name: redis
-        image: redis:alpine
-        ports:
-        - containerPort: 6379
-          name: redis
+        - name: redis
+          image: redis:alpine
+          ports:
+            - containerPort: 6379
+              name: redis
 
 # db
---- 
+---
 apiVersion: v1
 kind: Service
-metadata: 
-  labels: 
+metadata:
+  labels:
     app: db
   name: db
-spec: 
+spec:
   clusterIP: None
-  ports: 
-  - name: db
-    port: 5432
-    targetPort: 5432
-  selector: 
+  ports:
+    - name: db
+      port: 5432
+      targetPort: 5432
+  selector:
     app: db
 ---
 apiVersion: apps/v1
@@ -84,30 +84,30 @@ spec:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
-            - matchExpressions:
-              - key: alpha.eksctl.io/nodegroup-name
-                operator: In
-                values:
-                - k8sb18-cluster-ng-1 
+              - matchExpressions:
+                  - key: alpha.eksctl.io/nodegroup-name
+                    operator: In
+                    values:
+                      - ridiculous-painting-1683146421-ng-1
       containers:
-      - name: db
-        image: postgres:9.4
-        env:
-        - name: PGDATA
-          value: /var/lib/postgresql/data/pgdata
-        - name: POSTGRES_USER
-          value: postgres
-        - name: POSTGRES_PASSWORD
-          value: postgres
-        ports:
-        - containerPort: 5432
-          name: db
-        volumeMounts:
-        - name: db-data
-          mountPath: /var/lib/postgresql/data
+        - name: db
+          image: postgres:9.4
+          env:
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: postgres
+          ports:
+            - containerPort: 5432
+              name: db
+          volumeMounts:
+            - name: db-data
+              mountPath: /var/lib/postgresql/data
       volumes:
-      - name: db-data
-        emptyDir: {}
+        - name: db-data
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -132,9 +132,9 @@ metadata:
     service.beta.kubernetes.io/aws-load-balancer-type: nlb
 spec:
   ports:
-  - port: 80
-    targetPort: 80
-    name: result-service
+    - port: 80
+      targetPort: 80
+      name: result-service
   selector:
     app: result
 ---
@@ -158,17 +158,17 @@ spec:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
-            - matchExpressions:
-              - key: alpha.eksctl.io/nodegroup-name
-                operator: In
-                values:
-                - k8sb18-cluster-ng-1 
+              - matchExpressions:
+                  - key: alpha.eksctl.io/nodegroup-name
+                    operator: In
+                    values:
+                      - ridiculous-painting-1683146421-ng-1
       containers:
-      - name: result
-        image: sreeharshav/example-voting-app_result:latest
-        ports:
-        - containerPort: 80
-          name: result
+        - name: result
+          image: sreeharshav/example-voting-app_result:latest
+          ports:
+            - containerPort: 80
+              name: result
 
 # vote
 ---
@@ -208,56 +208,56 @@ spec:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
-            - matchExpressions:
-              - key: alpha.eksctl.io/nodegroup-name
-                operator: In
-                values:
-                - k8sb18-cluster-ng-1 
+              - matchExpressions:
+                  - key: alpha.eksctl.io/nodegroup-name
+                    operator: In
+                    values:
+                      - ridiculous-painting-1683146421-ng-1
       containers:
-      - name: vote
-        image: sreeharshav/example-voting-app_vote:latest
-        ports:
-        - containerPort: 80
-          name: vote
+        - name: vote
+          image: sreeharshav/example-voting-app_vote:latest
+          ports:
+            - containerPort: 80
+              name: vote
 
-# worker
---- 
+# node
+---
 apiVersion: v1
 kind: Service
-metadata: 
-  labels: 
-    apps: worker
-  name: worker
-spec: 
+metadata:
+  labels:
+    apps: node
+  name: node
+spec:
   clusterIP: None
-  selector: 
-    app: worker
---- 
+  selector:
+    app: node
+---
 apiVersion: apps/v1
 kind: Deployment
-metadata: 
-  labels: 
-    app: worker
-  name: worker
-spec: 
+metadata:
+  labels:
+    app: node
+  name: node
+spec:
   replicas: 1
   selector:
     matchLabels:
-      app: worker
-  template: 
-    metadata: 
-      labels: 
-        app: worker
+      app: node
+  template:
+    metadata:
+      labels:
+        app: node
     spec:
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
-            - matchExpressions:
-              - key: alpha.eksctl.io/nodegroup-name
-                operator: In
-                values:
-                - k8sb18-cluster-ng-1  
-      containers: 
-      - image: sreeharshav/example-voting-app_worker:latest
-        name: worker
+              - matchExpressions:
+                  - key: alpha.eksctl.io/nodegroup-name
+                    operator: In
+                    values:
+                      - ridiculous-painting-1683146421-ng-1
+      containers:
+        - image: sreeharshav/example-voting-app_node:latest
+          name: node
