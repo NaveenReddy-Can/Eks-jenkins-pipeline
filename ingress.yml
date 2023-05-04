@@ -24,7 +24,7 @@ spec:
     - host: vote.naveenreddy.online
       http:
         paths:
-          - path: /*
+          - path: /
             pathType: Prefix
             backend:
               service:
@@ -34,7 +34,7 @@ spec:
     - host: result.naveenreddy.online
       http:
         paths:
-          - path: /*
+          - path: /
             pathType: Prefix
             backend:
               service:
